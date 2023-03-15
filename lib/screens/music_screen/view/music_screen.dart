@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/screens/music_screen/provider/music_provider.dart';
+import 'package:provider/provider.dart';
 
 class MusicScreen extends StatefulWidget {
   const MusicScreen({Key? key}) : super(key: key);
@@ -8,8 +10,18 @@ class MusicScreen extends StatefulWidget {
 }
 
 class _MusicScreenState extends State<MusicScreen> {
+  music_provider? m,mt;
+  @override
+  void initState() {
+    super.initState();
+
+    Provider.of<music_provider>(context,listen: false).intiAudio();
+  }
+
   @override
   Widget build(BuildContext context) {
+    m = Provider.of<music_provider>(context,listen: false);
+    mt = Provider.of<music_provider>(context,listen: true);
     return SafeArea(
       child: Scaffold(
         body: Stack(
@@ -53,7 +65,9 @@ class _MusicScreenState extends State<MusicScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      m!.startAudio();
+                    },
                     child: Icon(
                       Icons.play_arrow_outlined,
                       color: Colors.white,
@@ -61,7 +75,9 @@ class _MusicScreenState extends State<MusicScreen> {
                     style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      m!.stopAudio();
+                    },
                     child: Icon(
                       Icons.pause,
                       color: Colors.white,
