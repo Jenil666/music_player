@@ -1,3 +1,4 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/screens/music_screen/provider/music_provider.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,6 @@ class _MusicScreenState extends State<MusicScreen> {
   @override
   void initState() {
     super.initState();
-
     Provider.of<music_provider>(context, listen: false).intiAudio();
   }
 
@@ -52,13 +52,34 @@ class _MusicScreenState extends State<MusicScreen> {
                     )),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 500),
-              child: Slider(
-                activeColor: Colors.red,
-                value: 0.6,
-                onChanged: (value) {},
-              ),
+            PlayerBuilder.currentPosition(
+              player: m!.assetsAudioPlayer!,
+              builder: (context, position) {
+                return Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 500),
+                      child: Slider(
+                        max: m!.totalduration.inSeconds.toDouble(),
+                        activeColor: Colors.red,
+                        value: position.inSeconds.toDouble(),
+                        onChanged: (value) {
+                          m!.assetsAudioPlayer!.seek(
+                            Duration(seconds: value.toInt()),
+                          );
+                        },
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text("$position",style: TextStyle(color: Colors.white),),
+                        Spacer(),
+                        Text("${m!.totalduration}",style: TextStyle(color: Colors.white),),
+                      ],
+                    ),
+                  ],
+                );
+              },
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -76,7 +97,7 @@ class _MusicScreenState extends State<MusicScreen> {
                         color: Colors.white,
                       ),
                       style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -87,7 +108,7 @@ class _MusicScreenState extends State<MusicScreen> {
                         color: Colors.white,
                       ),
                       style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
                     ),
                     ElevatedButton(
                       onPressed: () {
@@ -95,33 +116,45 @@ class _MusicScreenState extends State<MusicScreen> {
                       },
                       child: mt!.mute == false
                           ? Icon(
-                        Icons.volume_mute_outlined,
-                        color: Colors.white,
-                      )
-                          : Icon(Icons.volume_down_outlined, color: Colors.white),
+                              Icons.volume_mute_outlined,
+                              color: Colors.white,
+                            )
+                          : Icon(Icons.volume_down_outlined,
+                              color: Colors.white),
                       style:
-                      ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
                     ),
                   ],
                 ),
               ),
             ),
-
             Align(
               alignment: Alignment.bottomCenter,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  ElevatedButton(onPressed: () {
-                    m!.previoussong();
-                  },
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    child: Icon(Icons.skip_previous_outlined,color: Colors.white,),),
-                  ElevatedButton(onPressed: () {
-                    m!.nextsong();
-                  },
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                    child: Icon(Icons.skip_next_outlined,color: Colors.white,),),
+                  ElevatedButton(
+                    onPressed: () {
+                      m!.previoussong();
+                    },
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: Icon(
+                      Icons.skip_previous_outlined,
+                      color: Colors.white,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      m!.nextsong();
+                    },
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: Icon(
+                      Icons.skip_next_outlined,
+                      color: Colors.white,
+                    ),
+                  ),
                 ],
               ),
             ),

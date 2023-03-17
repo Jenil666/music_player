@@ -10,6 +10,7 @@ class music_provider extends ChangeNotifier {
     Audio("assets/music/falak tu.mp3",),
     Audio("assets/music/sultan.mp3",),
   ];
+  Duration totalduration = Duration();
   void intiAudio() {
     assetsAudioPlayer = AssetsAudioPlayer();
     assetsAudioPlayer!.open(
@@ -19,6 +20,7 @@ class music_provider extends ChangeNotifier {
       autoStart: false,
       showNotification: true,
     );
+    length();
   }
 
   Future<void> startAudio() async {
@@ -45,5 +47,12 @@ class music_provider extends ChangeNotifier {
   Future<void> previoussong()
   async {
     await assetsAudioPlayer!.previous();
+  }
+
+  void length()
+  {
+    assetsAudioPlayer!.current.listen((event) {
+      totalduration = event!.audio.duration;
+    },) ;
   }
 }
